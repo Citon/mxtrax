@@ -1,0 +1,31 @@
+{% load static %}
+<link media="all" href="{% static 'nvd3/src/nv.d3.css' %}" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src='{% static 'd3/d3.min.js' %}'></script>
+<script type="text/javascript" src='{% static 'nvd3/nv.d3.min.js' %}'></script>
+{% load nvd3_tags %}
+</script>
+
+<head>
+<!--<meta http-equiv="refresh" content="5" >-->
+<script type="text/javascript" charset="utf-8" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+
+
+    <!-- code to include the NVD3 and D3 libraries goes here -->
+    <!-- load_nvd3 filter takes a comma-separated list of id's where -->
+    <!-- the charts need to be rendered to                             -->
+</head>
+<body>
+    {% include_nvd3jscss %}
+    {% load_chart charttype chartdata "linewithfocuschart_container" True "%d %b %Y %H" %}
+    {% include_container "linewithfocuschart_container" 400 '100%' %}
+
+	<h1> </h1>
+	<form><input type=button value="Refresh" onClick="window.location.reload()"></form>
+
+<script type="text/javascript" charset="utf-8">
+</script>
+
+
+
+</body>
