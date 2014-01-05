@@ -22,7 +22,7 @@ import re
 from pytz import timezone
 import dateutil.parser as dparser
 import os, sys, stat
-from django.core.validators import email_re
+
 
 class Command(BaseCommand):
 	description = """please refer to readme.txt for detailed description of the program."""
@@ -30,8 +30,9 @@ class Command(BaseCommand):
 	option_list = BaseCommand.option_list + (make_option('--long', '-1', dest='long', help='Help for the long options'),)
 
 	help = 'The purpose of this program is to look at the mbox file that receives emails that were bounced back, match each message that was properly bounced back to a MailTest object and update the receivetime field in MailTest, which corresponds to when the email bounced back.\nThe program will only send a report to the email address specified in Config if at least one maildomain in the database is marked as failing, regardless of maintenance mode status of any maildomain in the database. Here are some items that you need to verify before running the program:\n1)Make sure there is one object in Config based on which the program will run\n2)Make sure that all fields in object 1 of Config are filled out.'
-	def handle(self, **options):
 
+
+	def handle(self, **options):
 		#first check if object 1 in Config doesn't have any empty fields
 		if Config.objects.filter(id=1).exists():
 #			print date.today()
@@ -242,6 +243,14 @@ class Command(BaseCommand):
 				if fail_dom.failing == True and fail_dom.maintmode == False:
 					boo = True
 			if boo == True:
+
+				# Define email_re - Same pattern that used to be in django.core.validators
+				email_re = re.compile(
+					r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*"
+					r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-\011\013\014\016-\177])*"'
+					r')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?$)'
+					r'|\[(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\]$', re.IGNORECASE)
+
 				if email_re.match(Config.objects.get(id=1).alertuser):
 					send_mail('MXTRAX alert', '%s' % str, 'DO-NOT-REPLY', [Config.objects.get(id=1).alertuser], fail_silently=False)
 				else:

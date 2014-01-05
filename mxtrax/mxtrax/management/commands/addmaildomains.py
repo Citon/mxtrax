@@ -17,7 +17,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
 from mxtrax.models import Customer, MailDomain, MailTest, Config
 from django.db import models
-from django.core.validators import email_re
+import re
 from optparse import OptionParser
 import sys
 import csv
@@ -25,6 +25,7 @@ import csv
 class Command(BaseCommand):
 
 	option_list = BaseCommand.option_list + (make_option("-f", "--filename", action="store", type="string", dest="filename", help="LEARN HOW TO RUN THE COMMAND!"),)
+
 
 	help = 'you need to specify absolute path to your customer csv file'
 	def handle(self, *args, **options):
@@ -74,6 +75,14 @@ class Command(BaseCommand):
 							strng = ''
 							if counter == 0:
 								strng = row[2] + '@' + row[3]
+
+								# Define email_re - Same pattern that used to be in django.core.validators
+								email_re = re.compile(
+									r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*"
+									r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-\011\013\014\016-\177])*"'
+									r')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?$)'
+									r'|\[(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\]$', re.IGNORECASE)
+
 								if email_re.match(strng):
 								#match the maildomain that is being created with a Customer
 								#create a maildomain object and connect it to the given customer
