@@ -30,7 +30,7 @@ class Config(models.Model):
 	sendinguser = models.CharField(null=True, max_length=128, unique=True, verbose_name="Inbox email address")
 	maxreturntime = models.IntegerField(default=300, verbose_name="Max round trip time")
 	alertuser = models.CharField(null=True, max_length=128, unique=True, verbose_name="Send alerts to")
-	mboxpath = models.CharField(null=True, max_length=2048, unique=True, verbose_name="Mailbox path")
+	mboxpath = models.CharField(null=True, max_length=255, unique=True, verbose_name="Mailbox path")
 	maxfailnumber = models.IntegerField(default=0, verbose_name="Max no bounce back number")
 	maxfailpercentage = models.IntegerField(default=0, verbose_name="Max no bounce back %")
 	maxlatenumber = models.IntegerField(default=0, verbose_name="Max late number")
